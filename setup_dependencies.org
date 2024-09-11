@@ -38,7 +38,7 @@ This repository uses both [[https://github.com/xdp-project/xdp-tools/][libxdp]] 
 We will start by cloning this repository:
 
 #+begin_example
-git clone --recurse-submodules https://github.com/xdp-project/xdp-tutorial.git
+git clone --recurse-submodules https://github.com/CS-477/lab-0.git
 #+end_example
 
 

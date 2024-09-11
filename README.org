@@ -30,9 +30,11 @@ arriving packet, before the kernel does any other processing on the data.
 The programs are written in restricted C, and compiled into the eBPF byte
 code format that is executed and JIT-compiled in the kernel, after being
 verified for safety. This approach offers great flexibility and high
-performance, and integrates well with the rest of the system. For a general
+performance, and integrates well with the rest of the system.
+
+For a general
 introduction to XDP, read [[https://github.com/xdp-project/xdp-paper/blob/master/xdp-the-express-data-path.pdf][the academic paper (pdf)]], or the [[https://cilium.readthedocs.io/en/latest/bpf/][Cilium BPF
-reference guide]].
+reference guide]]. These references are for your own understanding and are optional.
 
 This tutorial aims to be a practical introduction to the different steps
 needed to successfully write useful programs using the XDP system. We assume
@@ -40,15 +42,6 @@ you have a basic understanding of Linux networking and how to configure it
 with the =iproute2= suite of tools, but assume no prior experience with eBPF
 or XDP. Prior programming experience is also helpful: the lessons are all
 written in C and they include some basic pointer arithmetic and aliasing.
-
-The tutorial is a work in progress, and was initially created for use as a
-live tutorial at the [[https://www.netdevconf.org/0x13/session.html?tutorial-XDP-hands-on][Netdev Conference]] in Prague in March 2019. Since the
-kernel BPF subsystem continues to develop at a rapid pace, this tutorial has
-not kept up with all developments. However, everything presented here will
-work with recent kernels, and this tutorial functions as a self-contained
-introduction that anyone can go through to learn the XDP basics. Input and
-contributions to advance towards this goal are very welcome; just open
-issues or pull requests in the [[https://github.com/xdp-project/xdp-tutorial/][Github repository]].
 
 * First step: Setup dependencies
 
@@ -66,11 +59,15 @@ subdirectory, and the lessons are grouped by category:
 
 - Basic setup (directories starting with basicXX)
 - Packet processing (directories starting with packetXX)
-- Advanced topics (directories starting with advancedXX)
+- Advanced topics, which are optional (directories starting with advancedXX)
 
 We recommend you start with the "basic" lessons, and follow the lessons in
 each category in numerical order. Read the README.org file in each lesson
 directory for instructions on how to complete the lesson.
+
+We recommend completing the advanced lessons in case you have time, but these
+are optional and will not hinder your progress in subsequent labs coming after
+the first two weeks.
 
 ** Basic setup lessons
 We recommend you start with these lessons, as they will teach you how to
@@ -87,7 +84,7 @@ to process data packets, including parsing, rewriting, instructing the
 kernel about what to do with the packet after processing, and how to use
 helpers to access existing kernel functionality.
 
-** Advanced lessons
+** Advanced lessons (Optional)
 After having completed the lessons in the basic and packet processing
 categories, you should be all set to write your first real XDP program that
 will do useful processing of the packets coming into the system. However,
@@ -98,3 +95,7 @@ The topics covered in the advanced lessons include how to make eBPF programs
 in other parts of the kernel interact with your XDP program, passing
 metadata between programs, best practices for interacting with user space and
 kernel features, and how to run multiple XDP programs on a single interface.
+
+* Submission
+
+The lab spans the first 4 weeks, and has a deadline at 23:59 on 6/10/24. This lab comprises 15% of the total labs part of this course. The final submission is at the end of four weeks.
