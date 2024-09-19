@@ -138,6 +138,12 @@ int main(int argc, char **argv)
 		/* return xdp_link_detach(cfg.ifindex, cfg.xdp_flags, 0); */
 	}
 
+	int len = snprintf(cfg.pin_dir, 512, "%s/%s", pin_basedir, cfg.ifname);
+	if (len < 0) {
+		fprintf(stderr, "ERR: creating pin dirname\n");
+		return EXIT_FAIL_OPTION;
+	}
+
 	program = load_bpf_and_xdp_attach(&cfg);
 	if (!program)
 		return EXIT_FAIL_BPF;
@@ -149,11 +155,20 @@ int main(int argc, char **argv)
 		       cfg.ifname, cfg.ifindex);
 	}
 
-	/* Use the --dev name as subdir for exporting/pinning maps */
-	err = pin_maps_in_bpf_object(xdp_program__bpf_obj(program), cfg.ifname);
-	if (err) {
-		fprintf(stderr, "ERR: pinning maps\n");
-		return err;
+	int pinned_map_fd = bpf_obj_get(cfg.pin_dir);
+	if (cfg.reuse_maps && pinned_map_fd > 0) {
+		struct bpf_object *obj = bpf_object__open(cfg.filename);
+		struct bpf_map    *map = bpf_object__find_map_by_name(obj, "xdp_stats_map");
+		bpf_map__reuse_fd(map, pinned_map_fd);
+		bpf_object__load(obj);
+	}
+	else {
+		/* Use the --dev name as subdir for exporting/pinning maps */
+		err = pin_maps_in_bpf_object(xdp_program__bpf_obj(program), cfg.ifname);
+		if (err) {
+			fprintf(stderr, "ERR: pinning maps\n");
+			return err;
+		}
 	}
 
 	return EXIT_OK;
