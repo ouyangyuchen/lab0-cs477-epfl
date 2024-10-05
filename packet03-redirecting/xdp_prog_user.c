@@ -54,6 +54,14 @@ static int parse_mac(char *str, unsigned char mac[ETH_ALEN])
 {
 	/* Assignment 3: parse a MAC address in this function and place the
 	 * result in the mac array */
+	for (int i = 0; i < ETH_ALEN; i++) {
+		char *ptr = str + 3 * i;
+		int x = strtoul(ptr, 0, 16);
+		if (x > 0xff)
+			return -1;
+
+		mac[i] = x;
+	}
 
 	return 0;
 }
@@ -125,7 +133,10 @@ int main(int argc, char **argv)
 
 
 	/* Assignment 3: open the tx_port map corresponding to the cfg.ifname interface */
-	map_fd = -1;
+	map_fd = open_bpf_map_file(pin_dir, "tx_port", 0);
+	if (map_fd < 0) {
+		return EXIT_FAIL_BPF;
+	}
 
 	printf("map dir: %s\n", pin_dir);
 
@@ -136,7 +147,10 @@ int main(int argc, char **argv)
 		printf("redirect from ifnum=%d to ifnum=%d\n", cfg.ifindex, cfg.redirect_ifindex);
 
 		/* Assignment 3: open the redirect_params map corresponding to the cfg.ifname interface */
-		map_fd = -1;
+		map_fd = open_bpf_map_file(pin_dir, "redirect_params", 0);
+		if (map_fd < 0) {
+			return EXIT_FAIL_BPF;
+		}
 
 		/* Setup the mapping containing MAC addresses */
 		if (write_iface_params(map_fd, src, dest) < 0) {
